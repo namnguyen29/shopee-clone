@@ -8,7 +8,7 @@ import { appQueryClient } from '@app-core/configs';
 export const App = () => {
   return (
     <QueryClientProvider client={appQueryClient}>
-      <RouterProvider router={rootRouter} />;
+      <RouterProvider router={rootRouter} />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
