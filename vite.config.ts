@@ -13,6 +13,7 @@ export default defineConfig({
       '@app-pages': path.resolve(__dirname, './src/app/pages'),
       '@app-containers': path.resolve(__dirname, './src/app/containers'),
       '@app-core': path.resolve(__dirname, './src/app/core'),
+      '@app-assets': path.resolve(__dirname, './src/assets'),
       '@app-environments': path.resolve(__dirname, './src/environments'),
       '@app-shared': path.resolve(__dirname, './src/app/shared')
     }

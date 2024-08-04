@@ -1,0 +1,21 @@
+.area {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.areaBorderRight:not(:last-child) {
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
+
+  @media screen and (max-width: 768px) {
+    border-right: unset;
+  }
+}
+
+.bgPositionGov {
+  background-position: 14.391143911439114% 99.41176470588235%;
+  background-size: 551.6666666666666% 477.77777777777777%;
+}
+
+.bgPositionNoFake {
+  background-position: 1.6286644951140066% 92.21556886227545%;
+  background-size: 1379.1666666666667% 447.9166666666667%;
+}

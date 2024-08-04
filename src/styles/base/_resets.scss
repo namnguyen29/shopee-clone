@@ -23,9 +23,10 @@ dd {
   margin-block-end: 0;
 }
 
-ul[role='list'],
-ol[role='list'] {
+ul,
+ol {
   list-style: none;
+  line-height: 1;
 }
 
 body,
