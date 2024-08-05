@@ -8,13 +8,14 @@ import { FormDivider } from './components';
 
 export const Register = () => {
   const { handleSubmit } = useForm();
+
   return (
-    <article className="registerPage grid w-full grid-cols-2 grid-rows-1 px-2 md:px-0">
+    <article className="grid w-full grid-cols-2 grid-rows-1 px-2 md:px-0">
       <div
         className={clsx(
           'form-wrapper col-start-1 col-end-3 flex flex-col items-center justify-center md:col-start-2',
           'w-full max-w-[400px] justify-self-center bg-white',
-          'shadow-sp-alpha-14 rounded'
+          'rounded shadow-sp-alpha-14'
         )}
       >
         <form
@@ -23,7 +24,7 @@ export const Register = () => {
           })}
           className={clsx('w-full', 'px-[30px] py-[22px]', 'flex flex-col items-center gap-7')}
         >
-          <h3 className="text-sp-black-1 self-start text-xl">Đăng ký</h3>
+          <h3 className="self-start text-xl text-sp-black-1">Đăng ký</h3>
           <AppInput placeholder="Email address" type={'text'} />
           <AppInput placeholder="Password" type="password" />
           <AppButton variant="primary" label="TIẾP THEO" type="submit" />
@@ -34,7 +35,7 @@ export const Register = () => {
         <div
           className={clsx(
             styles.snsLogin,
-            'mt-2 gap-3',
+            'mt-5 gap-3',
             'snsLogin flex w-full max-w-[400px] px-[30px]'
           )}
         >
