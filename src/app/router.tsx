@@ -1,7 +1,8 @@
 import { Suspense } from 'react';
+
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 
-import { MainLayout, RegisterLayout } from './containers';
+import { MainLayout, RegisterLayout } from '@app-containers/layouts';
 import { Home, Login, ProductList, Register } from './pages';
 
 export const rootRouter = createBrowserRouter([

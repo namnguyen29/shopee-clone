@@ -24,8 +24,18 @@ export const Login = () => {
           className={clsx('flex w-full flex-col items-center gap-7 px-[30px] py-[22px]')}
         >
           <h3 className="self-start text-xl text-sp-black-1">Đăng nhập</h3>
-          <AppInput placeholder="Email/SDT/Tên đăng nhập" type={'text'} />
-          <AppInput placeholder="Mật khẩu" type="password" />
+          <AppInput
+            placeholder="Email/SDT/Tên đăng nhập"
+            type="text"
+            ariaRequired={true}
+            autocomplete="email"
+          />
+          <AppInput
+            placeholder="Mật khẩu"
+            type="password"
+            autocomplete="current-password"
+            ariaRequired={true}
+          />
           <AppButton variant="primary" label="ĐĂNG NHẬP" type="submit" />
         </form>
 

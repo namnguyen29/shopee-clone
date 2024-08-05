@@ -1,43 +1,132 @@
-import { useForm } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import clsx from 'clsx';
 
 import { AppInput, FacebookIcon, GoogleIcon, AppButton } from '@app-shared/components';
 import styles from './Register.module.scss';
 import { FormDivider } from './components';
+import { authApiKey, register } from '@app-shared/apis';
+import { RegisterError, RegisterInput, RegisterResponse } from '@app-shared/types';
+import { registerValidatorSchema } from './validators';
+
+type RegisterFormInput = RegisterInput & { confirm_password: string };
 
 export const Register = () => {
-  const { handleSubmit } = useForm();
+  const {
+    control,
+    setError,
+    formState: { isValid },
+    handleSubmit
+  } = useForm<RegisterFormInput>({
+    defaultValues: {
+      email: '',
+      password: '',
+      confirm_password: ''
+    },
+    resolver: yupResolver(registerValidatorSchema)
+  });
+
+  const registerMutation = useMutation<RegisterResponse, RegisterError, RegisterInput>({
+    mutationKey: [authApiKey.register],
+    mutationFn: (body) => register(body)
+  });
+
+  const onSubmitForm = handleSubmit((data) => {
+    const { email, password } = data;
+
+    registerMutation.mutate(
+      { email, password },
+      {
+        onSuccess(data, variables, context) {
+          console.log({
+            data,
+            variables,
+            context
+          });
+        },
+        onError(error) {
+          const formError = error.response?.data.data;
+          formError &&
+            Object.keys(formError).forEach((key) => {
+              const errorKey = key as keyof typeof formError;
+              setError(errorKey, {
+                type: 'server',
+                message: formError[errorKey]
+              });
+            });
+        }
+      }
+    );
+  });
 
   return (
     <article className="grid w-full grid-cols-2 grid-rows-1 px-2 md:px-0">
       <div
-        className={clsx(
-          'form-wrapper col-start-1 col-end-3 flex flex-col items-center justify-center md:col-start-2',
-          'w-full max-w-[400px] justify-self-center bg-white',
-          'rounded shadow-sp-alpha-14'
-        )}
+        className={
+          'col-start-1 col-end-3 flex w-full max-w-[400px] flex-col items-center justify-center justify-self-center rounded bg-white shadow-sp-alpha-14 md:col-start-2'
+        }
       >
         <form
-          onSubmit={handleSubmit((data) => {
-            console.log('submit register::', data);
-          })}
-          className={clsx('w-full', 'px-[30px] py-[22px]', 'flex flex-col items-center gap-7')}
+          noValidate
+          onSubmit={onSubmitForm}
+          className="flex w-full flex-col items-center gap-7 px-[30px] py-[22px]"
         >
           <h3 className="self-start text-xl text-sp-black-1">Đăng ký</h3>
-          <AppInput placeholder="Email address" type={'text'} />
-          <AppInput placeholder="Password" type="password" />
-          <AppButton variant="primary" label="TIẾP THEO" type="submit" />
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onBlur, onChange }, formState: { errors } }) => (
+              <AppInput
+                placeholder="Email address"
+                type="text"
+                ariaRequired={true}
+                onChange={onChange}
+                onBlur={onBlur}
+                autocomplete="email"
+                error={errors && errors.email?.message}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onBlur, onChange }, formState: { errors } }) => (
+              <AppInput
+                placeholder="Password"
+                type="password"
+                ariaRequired={true}
+                onChange={onChange}
+                onBlur={onBlur}
+                autocomplete="email"
+                error={errors && errors.password?.message}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="confirm_password"
+            render={({ field: { onBlur, onChange }, formState: { errors } }) => (
+              <AppInput
+                placeholder="Confirm Password"
+                type="password"
+                ariaRequired={true}
+                onChange={onChange}
+                onBlur={onBlur}
+                error={errors && errors.confirm_password?.message}
+              />
+            )}
+          />
+
+          <AppButton variant="primary" label="TIẾP THEO" type="submit" disabled={!isValid} />
         </form>
 
         <FormDivider />
 
         <div
-          className={clsx(
-            styles.snsLogin,
-            'mt-5 gap-3',
-            'snsLogin flex w-full max-w-[400px] px-[30px]'
-          )}
+          className={`${styles.snsLogin} gap-3snsLogin px-[30px]' mt-5 flex w-full max-w-[400px]`}
         >
           <AppButton
             disabled
