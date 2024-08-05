@@ -3,9 +3,9 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 export class HttpConfig {
   private readonly baseHttp!: AxiosInstance;
 
-  constructor(public apiUrl: string) {
+  constructor(private readonly apiUrl: string) {
     this.baseHttp = axios.create({
-      baseURL: apiUrl
+      baseURL: this.apiUrl
     });
   }
 
@@ -43,3 +43,5 @@ export class HttpConfig {
     return this.baseHttp.delete<T, R, D>(url, config);
   }
 }
+
+export const createApiClient = (apiUrl: string) => new HttpConfig(apiUrl);

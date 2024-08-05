@@ -15,6 +15,7 @@ type Props = Readonly<{
   error?: string;
   label?: string;
   value?: string;
+  ariaRequired?: boolean;
   autocomplete?: HTMLInputAutoCompleteAttribute;
   inputRef?: RefObject<HTMLInputElement>;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -32,16 +33,17 @@ export const AppInput = ({
   label,
   value,
   autocomplete,
+  ariaRequired,
   inputRef,
   onBlur,
   onChange
 }: Props) => {
   return (
-    <Field className={clsx('w-full text-sm')}>
+    <Field className={'w-full text-sm'}>
       <Label htmlFor={id}>{label}</Label>
       <Input
         className={clsx(
-          'border-sp-black-alpha-14 border p-3',
+          'border border-sp-black-alpha-14 p-3',
           styles.textInput,
           'h-10 rounded-sm outline-1',
           'focus:outline',
@@ -57,6 +59,7 @@ export const AppInput = ({
         autoComplete={autocomplete}
         value={value}
         name={name}
+        aria-required={ariaRequired}
         placeholder={placeholder}
         onChange={onChange}
         onBlur={onBlur}

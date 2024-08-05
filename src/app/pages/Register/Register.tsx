@@ -25,8 +25,18 @@ export const Register = () => {
           className={clsx('w-full', 'px-[30px] py-[22px]', 'flex flex-col items-center gap-7')}
         >
           <h3 className="self-start text-xl text-sp-black-1">Đăng ký</h3>
-          <AppInput placeholder="Email address" type={'text'} />
-          <AppInput placeholder="Password" type="password" />
+          <AppInput
+            placeholder="Email address"
+            type="text"
+            ariaRequired={true}
+            autocomplete="email"
+          />
+          <AppInput
+            placeholder="Password"
+            type="password"
+            ariaRequired={true}
+            autocomplete="current-password"
+          />
           <AppButton variant="primary" label="TIẾP THEO" type="submit" />
         </form>
 

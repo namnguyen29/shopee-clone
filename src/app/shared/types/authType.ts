@@ -12,3 +12,7 @@ export type RegisterResponse = {
   expires_refresh_token: string;
   user: User;
 };
+
+export type LoginInput = RegisterInput;
+
+export type LoginResponse = RegisterResponse;
