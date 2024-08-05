@@ -16,11 +16,11 @@ export const AppButton = ({ label, type, disabled, icon, variant, onClick }: Pro
   return (
     <Button
       className={clsx(
-        'border-sp-gray-1 rounded-sm border',
+        'rounded-sm border border-sp-gray-1',
         'flex items-center justify-center outline-0',
-        'w-full gap-1 rounded-sm px-[12px] py-[7px]',
+        'w-full gap-1 rounded-sm px-[12px] py-[7px] ring-orange-200 focus:ring-2',
         disabled && 'cursor-not-allowed opacity-50',
-        variant === 'primary' ? 'bg-sp-orange-0 text-white' : 'text-sp-black-1 bg-white'
+        variant === 'primary' ? 'bg-sp-orange-0 text-white' : 'bg-white text-sp-black-1'
       )}
       disabled={disabled}
       type={type}
