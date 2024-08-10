@@ -1,10 +1,17 @@
 import { lazy } from 'react';
 
-export const Home = lazy(() => import('./Home/Home').then(({ Home }) => ({ default: Home })));
-export const Login = lazy(() => import('./Login/Login').then(({ Login }) => ({ default: Login })));
-export const ProductList = lazy(() =>
-  import('./ProductList/ProductList').then(({ ProductList }) => ({ default: ProductList }))
-);
-export const Register = lazy(() =>
-  import('./Register/Register').then(({ Register }) => ({ default: Register }))
-);
+export const Home = lazy(async () => ({
+  default: (await import('./Home/Home')).Home
+}));
+
+export const Login = lazy(async () => ({
+  default: (await import('./Login/Login')).Login
+}));
+
+export const ProductList = lazy(async () => ({
+  default: (await import('./ProductList/ProductList')).ProductList
+}));
+
+export const Register = lazy(async () => ({
+  default: (await import('./Register/Register')).Register
+}));

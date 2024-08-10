@@ -1,18 +1,26 @@
-import { AxiosError, AxiosResponse } from 'axios';
+import { httpClient } from './apiClient';
+import {
+  AuthResponse,
+  GenericResponse,
+  RegisterError,
+  RegisterInput,
+  RegisterResponse
+} from '@app-shared/types';
 
-import { http } from './apiClient';
-import { GenericResponseType, RegisterInput, RegisterResponse } from '@app-shared/types';
-
-export const register = async (): Promise<
-  AxiosResponse<GenericResponseType<RegisterResponse>, RegisterInput>
-> => {
+export const register = async (body: RegisterInput): Promise<RegisterResponse> => {
   try {
-    const result = await http.post<GenericResponseType<RegisterResponse>, RegisterInput>(
-      '/register'
+    const result = await httpClient.post<GenericResponse<AuthResponse>, RegisterInput>(
+      '/registerr',
+      body
     );
     return result;
   } catch (error) {
-    const axiosError = error as AxiosError;
+    const axiosError = error as RegisterError;
     throw axiosError;
   }
+};
+
+export const authApiKey = {
+  register: 'REGISTER',
+  login: 'LOGIN'
 };

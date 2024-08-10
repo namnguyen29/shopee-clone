@@ -1,12 +1,48 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  HttpStatusCode
+} from 'axios';
+
+import { HTTP_TIMEOUT } from '@app-shared/constants';
+import { errorToast } from '@app-shared/utils';
 
 export class HttpConfig {
   private readonly baseHttp!: AxiosInstance;
 
-  constructor(public apiUrl: string) {
+  constructor(
+    public apiUrl: string,
+    public accessToken?: string
+  ) {
     this.baseHttp = axios.create({
-      baseURL: apiUrl
+      baseURL: apiUrl,
+      timeout: HTTP_TIMEOUT,
+      headers: {
+        'Content-Type': 'application/json'
+      }
     });
+
+    this.baseHttp.interceptors.request.use(
+      (config) => {
+        if (accessToken) {
+          config.headers.Authorization = `Bearer ${accessToken}`;
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
+
+    this.baseHttp.interceptors.response.use(
+      (response) => response,
+      (error: AxiosError) => {
+        if (error.response?.status !== HttpStatusCode.UnprocessableEntity) {
+          errorToast(error.message);
+        }
+        return Promise.reject(error);
+      }
+    );
   }
 
   public get httpInstance(): AxiosInstance {
@@ -43,3 +79,5 @@ export class HttpConfig {
     return this.baseHttp.delete<T, R, D>(url, config);
   }
 }
+
+export const createApiClient = (apiUrl: string) => new HttpConfig(apiUrl);
