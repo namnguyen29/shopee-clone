@@ -39,7 +39,7 @@ export const AppInput = ({
   onChange
 }: Props) => {
   return (
-    <Field className={'w-full text-sm'}>
+    <Field className="relative w-full text-sm">
       <Label htmlFor={id}>{label}</Label>
       <Input
         className={clsx(
@@ -64,7 +64,7 @@ export const AppInput = ({
         onChange={onChange}
         onBlur={onBlur}
       />
-      {error && <p className={clsx('text-sp-red-0')}>{error}</p>}
+      {error && <p className="absolute text-sp-red-0">{error}</p>}
     </Field>
   );
 };

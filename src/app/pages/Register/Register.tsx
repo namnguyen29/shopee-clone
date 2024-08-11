@@ -1,24 +1,19 @@
 import { useMutation } from '@tanstack/react-query';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { AppInput, FacebookIcon, GoogleIcon, AppButton } from '@app-shared/components';
 import styles from './Register.module.scss';
 import { FormDivider } from './components';
 import { authApiKey, register } from '@app-shared/apis';
 import { RegisterError, RegisterInput, RegisterResponse } from '@app-shared/types';
-import { registerValidatorSchema } from './validators';
-
-type RegisterFormInput = RegisterInput & { confirm_password: string };
+import { RegisterSchema, registerValidatorSchema } from './validators';
+import { successToast } from '@app-shared/utils';
 
 export const Register = () => {
-  const {
-    control,
-    setError,
-    formState: { isValid },
-    handleSubmit
-  } = useForm<RegisterFormInput>({
+  const navigate = useNavigate();
+  const { control, setError, handleSubmit } = useForm<RegisterSchema>({
     defaultValues: {
       email: '',
       password: '',
@@ -34,16 +29,12 @@ export const Register = () => {
 
   const onSubmitForm = handleSubmit((data) => {
     const { email, password } = data;
-
     registerMutation.mutate(
       { email, password },
       {
-        onSuccess(data, variables, context) {
-          console.log({
-            data,
-            variables,
-            context
-          });
+        onSuccess() {
+          successToast('Amazing, welcome to SP Clone');
+          navigate('/login');
         },
         onError(error) {
           const formError = error.response?.data.data;
@@ -62,11 +53,7 @@ export const Register = () => {
 
   return (
     <article className="grid w-full grid-cols-2 grid-rows-1 px-2 md:px-0">
-      <div
-        className={
-          'col-start-1 col-end-3 flex w-full max-w-[400px] flex-col items-center justify-center justify-self-center rounded bg-white shadow-sp-alpha-14 md:col-start-2'
-        }
-      >
+      <div className="col-start-1 col-end-3 flex w-full max-w-[400px] flex-col items-center justify-center justify-self-center rounded bg-white shadow-sp-alpha-14 md:col-start-2">
         <form
           noValidate
           onSubmit={onSubmitForm}
@@ -79,12 +66,13 @@ export const Register = () => {
             render={({ field: { onBlur, onChange }, formState: { errors } }) => (
               <AppInput
                 placeholder="Email address"
+                autocomplete="email"
                 type="text"
+                id="email"
                 ariaRequired={true}
                 onChange={onChange}
                 onBlur={onBlur}
-                autocomplete="email"
-                error={errors && errors.email?.message}
+                error={errors.email?.message}
               />
             )}
           />
@@ -96,11 +84,12 @@ export const Register = () => {
               <AppInput
                 placeholder="Password"
                 type="password"
+                id="password"
+                autocomplete="current-password"
                 ariaRequired={true}
                 onChange={onChange}
                 onBlur={onBlur}
-                autocomplete="email"
-                error={errors && errors.password?.message}
+                error={errors.password?.message}
               />
             )}
           />
@@ -112,15 +101,16 @@ export const Register = () => {
               <AppInput
                 placeholder="Confirm Password"
                 type="password"
+                id="confirm_password"
                 ariaRequired={true}
                 onChange={onChange}
                 onBlur={onBlur}
-                error={errors && errors.confirm_password?.message}
+                error={errors.confirm_password?.message}
               />
             )}
           />
 
-          <AppButton variant="primary" label="TIẾP THEO" type="submit" disabled={!isValid} />
+          <AppButton variant="primary" label="TIẾP THEO" type="submit" />
         </form>
 
         <FormDivider />

@@ -20,4 +20,8 @@ export type LoginInput = RegisterInput;
 
 export type RegisterResponse = AxiosResponse<GenericResponse<AuthResponse>, RegisterInput>;
 
+export type LoginResponse = AxiosResponse<GenericResponse<AuthResponse>, LoginInput>;
+
 export type RegisterError = AxiosError<GenericResponse<{ email: string }>>;
+
+export type LoginError = AxiosError<GenericResponse<LoginInput>>;
