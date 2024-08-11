@@ -38,7 +38,7 @@ export class HttpConfig {
       (response) => response,
       (error: AxiosError) => {
         if (error.response?.status !== HttpStatusCode.UnprocessableEntity) {
-          errorToast(error.message);
+          errorToast<string>(error.message);
         }
         return Promise.reject(error);
       }
@@ -79,5 +79,3 @@ export class HttpConfig {
     return this.baseHttp.delete<T, R, D>(url, config);
   }
 }
-
-export const createApiClient = (apiUrl: string) => new HttpConfig(apiUrl);

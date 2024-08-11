@@ -1,47 +1,91 @@
-import { Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import clsx from 'clsx';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation } from '@tanstack/react-query';
+import { Controller, useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { FormDivider } from '@app-pages/Register/components';
 import { AppButton, AppInput, FacebookIcon, GoogleIcon } from '@app-shared/components';
+import { LoginError, LoginInput, LoginResponse } from '@app-shared/types';
+import { authApiKey, login } from '@app-shared/apis';
+import { loginValidatorSchema } from './validators';
 
 export const Login = () => {
-  const { handleSubmit } = useForm();
+  const navigate = useNavigate();
+  const { control, setError, handleSubmit } = useForm<LoginInput>({
+    defaultValues: {
+      email: '',
+      password: ''
+    },
+    resolver: yupResolver(loginValidatorSchema)
+  });
+  const loginMutation = useMutation<LoginResponse, LoginError, LoginInput>({
+    mutationKey: [authApiKey.login],
+    mutationFn: (body) => login(body)
+  });
+
+  const onSubmit = handleSubmit((data) => {
+    console.log('login::', data);
+    loginMutation.mutate(data, {
+      onSuccess() {
+        navigate('/');
+      },
+      onError(error) {
+        const formError = error.response?.data.data;
+        formError &&
+          Object.keys(formError).forEach((key) => {
+            const errorKey = key as keyof typeof formError;
+            setError(errorKey, { type: 'server', message: formError[errorKey] });
+          });
+      }
+    });
+  });
 
   return (
     <article className="grid w-full grid-cols-2 grid-rows-1 px-2 md:px-0">
-      <div
-        className={clsx(
-          'form-wrapper col-start-1 col-end-3 flex flex-col items-center justify-center md:col-start-2',
-          'w-full max-w-[400px] justify-self-center bg-white',
-          'rounded shadow-sp-alpha-14'
-        )}
-      >
+      <div className="col-start-1 col-end-3 flex w-full max-w-[400px] flex-col items-center justify-center justify-self-center rounded bg-white shadow-sp-alpha-14 md:col-start-2">
         <form
-          onSubmit={handleSubmit((data) => {
-            console.log('submit register::', data);
-          })}
-          className={clsx('flex w-full flex-col items-center gap-7 px-[30px] py-[22px]')}
+          onSubmit={onSubmit}
+          className="flex w-full flex-col items-center gap-7 px-[30px] py-[22px]"
         >
           <h3 className="self-start text-xl text-sp-black-1">Đăng nhập</h3>
-          <AppInput
-            placeholder="Email/SDT/Tên đăng nhập"
-            type="text"
-            ariaRequired={true}
-            autocomplete="email"
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onBlur, onChange }, formState: { errors } }) => (
+              <AppInput
+                id="email"
+                placeholder="Email/SDT/Tên đăng nhập"
+                autocomplete="email"
+                type="text"
+                ariaRequired={true}
+                onBlur={onBlur}
+                onChange={onChange}
+                error={errors.email?.message}
+              />
+            )}
           />
-          <AppInput
-            placeholder="Mật khẩu"
-            type="password"
-            autocomplete="current-password"
-            ariaRequired={true}
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onBlur, onChange }, formState: { errors } }) => (
+              <AppInput
+                id="password"
+                placeholder="Mật khẩu"
+                type="password"
+                autocomplete="current-password"
+                ariaRequired={true}
+                onBlur={onBlur}
+                onChange={onChange}
+                error={errors.password?.message}
+              />
+            )}
           />
           <AppButton variant="primary" label="ĐĂNG NHẬP" type="submit" />
         </form>
 
         <FormDivider />
 
-        <div className={clsx('my-5 gap-3', 'snsLogin flex w-full max-w-[400px] px-[30px]')}>
+        <div className="snsLogin my-5 flex w-full max-w-[400px] gap-3 px-[30px]">
           <AppButton
             disabled
             label="Facebook"
