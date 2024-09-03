@@ -1,19 +1,24 @@
 import { useMutation } from '@tanstack/react-query';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { AppInput, FacebookIcon, GoogleIcon, AppButton } from '@app-shared/components';
 import styles from './Register.module.scss';
 import { FormDivider } from './components';
-import { authApiKey, register } from '@app-shared/apis';
+import { authApiKey, register as registerAccount } from '@app-shared/apis';
 import { RegisterError, RegisterInput, RegisterResponse } from '@app-shared/types';
 import { RegisterSchema, registerValidatorSchema } from './validators';
 import { successToast } from '@app-shared/utils';
 
 export const Register = () => {
   const navigate = useNavigate();
-  const { control, setError, handleSubmit } = useForm<RegisterSchema>({
+  const {
+    setError,
+    handleSubmit,
+    register,
+    formState: { errors }
+  } = useForm<RegisterSchema>({
     defaultValues: {
       email: '',
       password: '',
@@ -24,7 +29,7 @@ export const Register = () => {
 
   const registerMutation = useMutation<RegisterResponse, RegisterError, RegisterInput>({
     mutationKey: [authApiKey.register],
-    mutationFn: (body) => register(body)
+    mutationFn: (body) => registerAccount(body)
   });
 
   const onSubmitForm = handleSubmit((data) => {
@@ -60,61 +65,37 @@ export const Register = () => {
           className="flex w-full flex-col items-center gap-7 px-[30px] py-[22px]"
         >
           <h3 className="self-start text-xl text-sp-black-1">Đăng ký</h3>
-          <Controller
-            control={control}
-            name="email"
-            render={({ field: { onBlur, onChange }, formState: { errors } }) => (
-              <AppInput
-                placeholder="Email address"
-                autocomplete="email"
-                type="text"
-                id="email"
-                ariaRequired={true}
-                onChange={onChange}
-                onBlur={onBlur}
-                error={errors.email?.message}
-              />
-            )}
+          <AppInput<RegisterSchema>
+            placeholder="Email address"
+            autocomplete="email"
+            type="text"
+            label="email"
+            ariaRequired={true}
+            error={errors.email?.message}
+            register={register}
           />
 
-          <Controller
-            control={control}
-            name="password"
-            render={({ field: { onBlur, onChange }, formState: { errors } }) => (
-              <AppInput
-                placeholder="Password"
-                type="password"
-                id="password"
-                autocomplete="current-password"
-                ariaRequired={true}
-                onChange={onChange}
-                onBlur={onBlur}
-                error={errors.password?.message}
-              />
-            )}
+          <AppInput<RegisterSchema>
+            placeholder="Password"
+            type="password"
+            autocomplete="current-password"
+            label="password"
+            ariaRequired={true}
+            error={errors.password?.message}
+            register={register}
           />
 
-          <Controller
-            control={control}
-            name="confirm_password"
-            render={({ field: { onBlur, onChange }, formState: { errors } }) => (
-              <AppInput
-                placeholder="Confirm Password"
-                type="password"
-                id="confirm_password"
-                ariaRequired={true}
-                onChange={onChange}
-                onBlur={onBlur}
-                error={errors.confirm_password?.message}
-              />
-            )}
+          <AppInput<RegisterSchema>
+            placeholder="Confirm Password"
+            type="password"
+            label="confirm_password"
+            ariaRequired={true}
+            error={errors.confirm_password?.message}
+            register={register}
           />
-
           <AppButton variant="primary" label="TIẾP THEO" type="submit" />
         </form>
-
         <FormDivider />
-
         <div
           className={`${styles.snsLogin} gap-3snsLogin px-[30px]' mt-5 flex w-full max-w-[400px]`}
         >

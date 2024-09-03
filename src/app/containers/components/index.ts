@@ -1,2 +1,3 @@
 export * from './RegisterFooter/RegisterFooter';
-export * from './RegisterHeader/RegisterHeader';
+export * from './Headers/RegisterHeader';
+export * from './Headers/MainHeader/MainHeader';

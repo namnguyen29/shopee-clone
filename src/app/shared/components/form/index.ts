@@ -1,2 +1,2 @@
-export * from './AppInput/AppInput';
+export * from './AppInput';
 export * from './AppCheckbox/AppCheckbox';
