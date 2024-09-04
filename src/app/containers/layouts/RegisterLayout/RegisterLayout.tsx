@@ -1,6 +1,6 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from 'react-router-dom';
 
-import { RegisterFooter, RegisterHeader } from "@app-containers/components";
+import { RegisterFooter, RegisterHeader } from '@app-containers/components';
 
 export const RegisterLayout = () => {
   const location = useLocation();

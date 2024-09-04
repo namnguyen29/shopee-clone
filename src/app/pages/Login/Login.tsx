@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { FormDivider } from '@app-pages/Register/components';
@@ -11,7 +11,12 @@ import { loginValidatorSchema } from './validators';
 
 export const Login = () => {
   const navigate = useNavigate();
-  const { control, setError, handleSubmit } = useForm<LoginInput>({
+  const {
+    setError,
+    handleSubmit,
+    register,
+    formState: { errors }
+  } = useForm<LoginInput>({
     defaultValues: {
       email: '',
       password: ''
@@ -24,7 +29,6 @@ export const Login = () => {
   });
 
   const onSubmit = handleSubmit((data) => {
-    console.log('login::', data);
     loginMutation.mutate(data, {
       onSuccess() {
         navigate('/');
@@ -48,37 +52,23 @@ export const Login = () => {
           className="flex w-full flex-col items-center gap-7 px-[30px] py-[22px]"
         >
           <h3 className="self-start text-xl text-sp-black-1">Đăng nhập</h3>
-          <Controller
-            control={control}
-            name="email"
-            render={({ field: { onBlur, onChange }, formState: { errors } }) => (
-              <AppInput
-                id="email"
-                placeholder="Email/SDT/Tên đăng nhập"
-                autocomplete="email"
-                type="text"
-                ariaRequired={true}
-                onBlur={onBlur}
-                onChange={onChange}
-                error={errors.email?.message}
-              />
-            )}
+          <AppInput<LoginInput>
+            placeholder="Email/SDT/Tên đăng nhập"
+            autocomplete="email"
+            type="text"
+            ariaRequired={true}
+            error={errors.email?.message}
+            label="email"
+            register={register}
           />
-          <Controller
-            control={control}
-            name="password"
-            render={({ field: { onBlur, onChange }, formState: { errors } }) => (
-              <AppInput
-                id="password"
-                placeholder="Mật khẩu"
-                type="password"
-                autocomplete="current-password"
-                ariaRequired={true}
-                onBlur={onBlur}
-                onChange={onChange}
-                error={errors.password?.message}
-              />
-            )}
+          <AppInput<LoginInput>
+            label="password"
+            type="password"
+            placeholder="Mật khẩu"
+            autocomplete="current-password"
+            ariaRequired={true}
+            register={register}
+            error={errors.password?.message}
           />
           <AppButton variant="primary" label="ĐĂNG NHẬP" type="submit" />
         </form>
