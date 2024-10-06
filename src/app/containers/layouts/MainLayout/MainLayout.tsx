@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
-import { MainHeader, RegisterFooter } from '@app-containers/components';
+import { RegisterFooter, MainHeader } from '@app-containers/components';
 
 export const MainLayout = () => {
   return (
